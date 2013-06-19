@@ -62,6 +62,7 @@
 unsigned char *image_buf = NULL;
 unsigned char *config_buf = NULL;
 int fileSize;
+int lockdown = 0;
 int readConfig = 0;
 int writeConfig = 0;
 int uiConfig = 0;
@@ -74,6 +75,12 @@ int verbose = 0;
 char mySensor[MAX_STRING_LEN];
 char imageFileName[MAX_STRING_LEN];
 char input_detect[MAX_STRING_LEN];
+
+enum update_mode {
+	NORMAL = 1,
+	FORCE = 2,
+	LOCKDOWN = 8,
+};
 
 static void usage(char *name)
 {
@@ -583,22 +590,25 @@ static void DoWriteConfig(void)
 
 static void DoReflash(void)
 {
+	int update_mode = NORMAL;
+
 	printf("Starting firmware update...\n");
 
 	if (SetImageName()) {
-		SetImageSize(fileSize);
-		WriteBinaryData((char *)&image_buf[0], fileSize);
-
 		if (force)
-			StartReflash(2);
-		else
-			StartReflash(1);
-	} else if (ProceedWithReflash()) {
-		SetImageSize(fileSize);
-		WriteBinaryData((char *)&image_buf[0], fileSize);
-		StartReflash(1);
+			update_mode = FORCE;
+
+		if (lockdown)
+			update_mode |= LOCKDOWN;
+	} else if (!ProceedWithReflash()) {
+		goto exit;
 	}
 
+	SetImageSize(fileSize);
+	WriteBinaryData((char *)&image_buf[0], fileSize);
+	StartReflash(update_mode);
+
+exit:
 	printf("Firmware update finished...\n");
 
 	return;
@@ -703,6 +713,8 @@ int main(int argc, char* argv[])
 			}
 			close(fd);
 			strncpy(imageFileName, argv[this_arg], MAX_STRING_LEN);
+		} else if (!strcmp((const char *)argv[this_arg], "-ld")) {
+			lockdown = 1;
 		} else if (!strcmp((const char *)argv[this_arg], "-r")) {
 			readConfig = 1;
 		} else if (!strcmp((const char *)argv[this_arg], "-ui")) {
