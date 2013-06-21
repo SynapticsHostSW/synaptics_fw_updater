@@ -85,8 +85,9 @@ enum update_mode {
 static void usage(char *name)
 {
 	printf("Version %s\n", VERSION);
-	printf("Usage: %s [-b {image_file}] [-r] [-ui] [-pm] [-bl] [-dp] [-f] [-v]\n", name);
+	printf("Usage: %s [-b {image_file}] [-ld] [-r] [-ui] [-pm] [-bl] [-dp] [-f] [-v]\n", name);
 	printf("\t[-b {image_file}] - Name of image file\n");
+	printf("\t[-ld] - Do lockdown\n");
 	printf("\t[-r] - Read config area\n");
 	printf("\t[-ui] - UI config area\n");
 	printf("\t[-pm] - Permanent config area\n");
