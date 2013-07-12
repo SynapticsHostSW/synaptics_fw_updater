@@ -16,6 +16,7 @@ Use ADB (Android Debug Bridge) to do command-line reflash
 
 Parameters
 [-b {image_file}] - Name of image file
+[-ld] - Do lockdown
 [-r] - Read config area
 [-ui] - UI config area
 [-pm] - Permanent config area
@@ -37,6 +38,8 @@ Procedures for checking whether to proceed with reflash
 Usage examples
 - Perform reflash using PR1234567.img
    synaptics_fw_updater -b PR1234567.img
+- Perform reflash using PR1234567.img and do lockdown
+   synaptics_fw_updater -b PR1234567.img -ld
 - Perform reflash using PR1234567.img regardless of PR number of FW on device
    synaptics_fw_updater -b PR1234567.img -f
 - Write config data from PR1234567.img (parsing config data from firmware

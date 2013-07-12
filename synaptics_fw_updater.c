@@ -28,7 +28,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
-#define VERSION "1.2"
+#define VERSION "1.3"
 
 #define INPUT_PATH "/sys/class/input/input"
 #define NUMBER_OF_INPUTS_TO_SCAN 20
